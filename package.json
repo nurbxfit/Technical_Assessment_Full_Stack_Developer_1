@@ -1,0 +1,8 @@
+{
+    "name": "arkmind-ass",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend"
+    ]
+}

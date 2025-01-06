@@ -11,6 +11,6 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "./dist",
   },
-  "include": ["**/*", "./src/schema/*.d.ts"],
+  "include": ["**/*", "./src/schema/*.d.ts", "../shared/schema"],
   "exclude": ["node_modules"]
 }

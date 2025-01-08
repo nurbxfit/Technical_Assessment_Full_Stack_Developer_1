@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import itemRoute from "./routes/item.route";
 import { HttpErrorHandlerMiddleware } from "./middleware/ErrorHandler";
+import { RequestLoggerMiddleware } from "./middleware/RequestLogger";
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -12,6 +13,9 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// logger middleware
+app.use(RequestLoggerMiddleware);
 
 // Routes
 app.use("/api/items", itemRoute);

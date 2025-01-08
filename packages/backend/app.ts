@@ -2,6 +2,7 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import itemRoute from "./routes/item.route";
+import { HttpErrorHandlerMiddleware } from "./middleware/ErrorHandler";
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -16,12 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/items", itemRoute);
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).send("Something broke!");
-});
+app.use(HttpErrorHandlerMiddleware);
 
 // Start server
 app.listen(port, () => {
-  console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+	console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
 });

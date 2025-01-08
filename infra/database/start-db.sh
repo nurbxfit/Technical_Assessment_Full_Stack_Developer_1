@@ -18,6 +18,6 @@ echo "MySQL database started and ready for connections on port 3306"
 docker cp ./items.sql arkmysql-db:/items.sql
 
 # Execute the SQL file inside the container
-docker exec -i arkmysql-db mysql -u root -ppassword123 -e "source ./items.sql"
+docker exec -i arkmysql-db mysql -u root -password123 -e "source ./items.sql"
 
 echo "SQL script executed successfully"

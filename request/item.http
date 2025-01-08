@@ -3,8 +3,8 @@ POST http://localhost:3000/api/items HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "item02",
-    "description": "description of item02",
+    "name": "item03",
+    "description": "description of item03",
     "price": 1.0
 }
 
@@ -13,16 +13,16 @@ GET http://localhost:3000/api/items HTTP/1.1
 Content-Type: application/json
 
 
-### Update an Item
+### Update an Item 
 PUT http://localhost:3000/api/items/1 HTTP/1.1
 Content-Type: application/json
 
 {
-    "name": "itemR1",
-    "description": "item renamed to R1",
+    "name": "item01",
+    "description": "item renamed to 01",
     "price": 1.2
 }
 
 
-### Delete an Item
-DELETE http://localhost:3000/api/items/1 HTTP/1.1
+### Delete an Item failed case
+DELETE http://localhost:3000/api/items/s1s HTTP/1.1

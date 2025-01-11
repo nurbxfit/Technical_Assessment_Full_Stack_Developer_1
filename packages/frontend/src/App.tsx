@@ -26,11 +26,6 @@ function App() {
     console.log("ItemsResponse:", itemsResponse);
     itemsResponse.forEach((item: Item) => {
       storeController.addItem(item);
-      storeController.showToast({
-        id: item.id.toString(),
-        message: `New item: ${item.name}`,
-        cooldown: 2,
-      });
     });
     // setItems(() => itemsResponse);
   }
@@ -94,30 +89,42 @@ function App() {
   }
 
   return (
-    <>
+    <div className="flex flex-col h-screen w-full">
       <Toast />
-      <div>
-        <ul>
-          {items.map((item) => (
-            <ItemCard
-              key={item.id}
-              item={item}
-              onDelete={handleItemDelete}
-              onClickEdit={handleClickEdit}
-            />
-          ))}
-        </ul>
-        <div>{!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}</div>
-        <div>
-          {editingItem && (
-            <UpdateItemForm
-              onSubmit={handleUpdateItem}
-              defaultValues={editingItem}
-            />
-          )}
+      <div className="flex flex-1 flex-wrap md:flex-nowrap">
+        <div className="w-full md:w-1/2 h-full bg-gradient-to-tr from-blue-800 to-purple-700 p-4 overflow-y-auto">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {items.map((item) => (
+              <ItemCard
+                key={item.id}
+                item={item}
+                onDelete={handleItemDelete}
+                onClickEdit={handleClickEdit}
+              />
+            ))}
+          </ul>
+        </div>
+        <div className="w-full md:w-1/2 p-4">
+          <div className="max-w-md mx-auto">
+            {!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}
+            {editingItem && (
+              <div>
+                <button
+                  onClick={() => setEditingItem(null)}
+                  className="text-blue-500 hover:underline"
+                >
+                  &larr; Cancel
+                </button>
+                <UpdateItemForm
+                  onSubmit={handleUpdateItem}
+                  defaultValues={editingItem}
+                />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

@@ -44,7 +44,7 @@ function App() {
       const createItemResponse = await itemService.createItem(item);
       storeController.addItem(createItemResponse);
       storeController.showToast({
-        message: "Added Item",
+        message: "Item added",
         type: "success",
       });
       storeController.closeModal(); // Close modal after submission
@@ -81,7 +81,7 @@ function App() {
       const deleteItemResponse = await itemService.deleteItem(itemId);
       storeController.deleteItem(deleteItemResponse.id);
       storeController.showToast({
-        message: "Deleted Item",
+        message: "Item deleted",
         type: "warning",
       });
     } catch (error: any) {
@@ -103,7 +103,7 @@ function App() {
         editingItem && (await itemService.updateItem(editingItem.id, item));
       storeController.updateItem(editedItemResponse.id, editedItemResponse);
       storeController.showToast({
-        message: "Updated Item",
+        message: "Item updated",
         type: "success",
       });
       storeController.closeModal();

@@ -26,10 +26,10 @@ Refer the [instruction](./INSTRUCTION.md)
 ## Prerequisites
 
 - install the followings
-  - [Node.js]() (v16 or higher)
-  - [Bun]()
-  - [Docker](optional for local database)
-  - [MySQL] (optional for local database)
+  - [Node.js](https://nodejs.org/en/download) (v16 or higher)
+  - [Bun](https://bun.sh/)
+  - [Docker](https://www.docker.com/) (optional for local database)
+  - [MySQL](https://www.mysql.com/) (optional for local database)
 - Ensure MySQL is running to accept connection.
 
 1. Git clone the project

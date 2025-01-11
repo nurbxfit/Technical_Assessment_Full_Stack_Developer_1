@@ -7,7 +7,7 @@ import UpdateItemForm from "./components/UpdateItemForm";
 import { storeController } from "./stores";
 import { useSelector } from "react-redux";
 import Toast from "./components/Toast";
-import Modal from "./components/Modal"; // Import the Modal component
+import Modal from "./components/Modal";
 import { Modal as ModalType } from "./stores/components.slice";
 import ConfirmationBox from "./components/ConfirmationBox";
 
@@ -60,7 +60,6 @@ function App() {
     const deletingItem = items.find((item) => item.id == itemId);
     setDeletingItem(deletingItem);
     storeController.openModal();
-    // handleItemDelete()
   }
 
   function handleConfirmDelete() {

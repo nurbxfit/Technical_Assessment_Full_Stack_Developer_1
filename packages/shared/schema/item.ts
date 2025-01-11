@@ -1,40 +1,65 @@
 import { z } from "zod";
 
+function getRefinedNonNegativeStringToNumberSchema(
+  message: string,
+  parseRadix?: number
+) {
+  return z
+    .string()
+    .refine((value) => {
+      const parsedValue = parseInt(value);
+      return (
+        !isNaN(parsedValue) && Number.isInteger(parsedValue) && parsedValue > 0
+      );
+    }, message)
+    .transform((value) => parseInt(value, parseRadix));
+}
+
+export const NameInputSchema = z
+  .string()
+  .max(100, "Name should be less 100 characters");
+
+export const DescriptionInputSchema = z
+  .string()
+  .max(500, "description cannot be more than 500 characters")
+  .optional();
+
+export const PriceInputSchema = getRefinedNonNegativeStringToNumberSchema(
+  "Price must be a positive number"
+);
+
 export const ItemSchema = z.object({
-	name: z.string().max(100, "name cannot be more than 100 characters"),
-	description: z
-		.string()
-		.max(500, "description cannot be more than 500 characters")
-		.optional(),
-	price: z.number().nonnegative(),
+  name: NameInputSchema,
+  description: DescriptionInputSchema,
+  price: PriceInputSchema,
 });
 
 export type ItemType = z.infer<typeof ItemSchema>;
 
 const IdValidationSchema = z
-	.string()
-	.nonempty("ID is required")
-	.refine((value) => {
-		const parsedValue = parseInt(value, 10);
-		return (
-			!isNaN(parsedValue) && Number.isInteger(parsedValue) && parsedValue > 0
-		);
-	}, "ID must be a positive integer")
-	.transform((value) => parseInt(value, 10));
+  .string()
+  .nonempty("ID is required")
+  .refine((value) => {
+    const parsedValue = parseInt(value, 10);
+    return (
+      !isNaN(parsedValue) && Number.isInteger(parsedValue) && parsedValue > 0
+    );
+  }, "ID must be a positive integer")
+  .transform((value) => parseInt(value, 10));
 
 export const DeleteItemRequestSchema = z.object({
-	params: z.object({
-		id: IdValidationSchema,
-	}),
+  params: z.object({
+    id: IdValidationSchema,
+  }),
 });
 
 export const UpdateItemRequestSchema = z.object({
-	body: ItemSchema,
-	params: z.object({
-		id: IdValidationSchema,
-	}),
+  body: ItemSchema,
+  params: z.object({
+    id: IdValidationSchema,
+  }),
 });
 
 export const CreateItemRequestSchemma = z.object({
-	body: ItemSchema,
+  body: ItemSchema,
 });

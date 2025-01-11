@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import Toast from "./components/Toast";
 import Modal from "./components/Modal"; // Import the Modal component
 import { Modal as ModalType } from "./stores/components.slice";
+import ConfirmationBox from "./components/ConfirmationBox";
 
 function App() {
   type Item = ItemType & {
@@ -18,6 +19,7 @@ function App() {
   const items = useSelector((state: { items: Item[] }) => state.items);
   const modal = useSelector((state: { modal: ModalType }) => state.modal);
   const [editingItem, setEditingItem] = useState<null | Item>();
+  const [deletingItem, setDeletingItem] = useState<null | Item>();
 
   useEffect(() => {
     fetchItems();
@@ -26,6 +28,7 @@ function App() {
   useEffect(() => {
     if (!modal.isOpen) {
       setEditingItem(null);
+      setDeletingItem(null);
     }
   }, [modal.isOpen]);
 
@@ -51,6 +54,26 @@ function App() {
         type: "error",
       });
     }
+  }
+
+  function handleClickDelete(itemId: number) {
+    const deletingItem = items.find((item) => item.id == itemId);
+    setDeletingItem(deletingItem);
+    storeController.openModal();
+    // handleItemDelete()
+  }
+
+  function handleConfirmDelete() {
+    if (deletingItem) {
+      handleItemDelete(deletingItem.id);
+    }
+    storeController.closeModal();
+    setDeletingItem(null);
+  }
+
+  function handleCancelDelete() {
+    storeController.closeModal();
+    setDeletingItem(null);
   }
 
   async function handleItemDelete(itemId: number) {
@@ -108,7 +131,7 @@ function App() {
               <ItemCard
                 key={item.id}
                 item={item}
-                onDelete={handleItemDelete}
+                onDelete={handleClickDelete}
                 onClickEdit={handleClickEdit}
               />
             ))}
@@ -129,7 +152,9 @@ function App() {
       </button>
 
       <Modal>
-        {!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}
+        {!editingItem && !deletingItem && (
+          <AddItemForm onSubmit={handleItemSubmit} />
+        )}
         {editingItem && (
           <div>
             <UpdateItemForm
@@ -137,6 +162,15 @@ function App() {
               defaultValues={editingItem}
             />
           </div>
+        )}
+
+        {deletingItem && (
+          <ConfirmationBox
+            title={`Deleting ${deletingItem.name}`}
+            subtitle="This action is permenant!"
+            onCancel={handleCancelDelete}
+            onConfirm={handleConfirmDelete}
+          />
         )}
       </Modal>
     </div>

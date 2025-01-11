@@ -60,16 +60,10 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (typeof onSubmit == "function") {
-      const form = event.currentTarget;
-      const formElements = form.elements as HTMLFormControlsCollection & {
-        itemName: { value: string };
-        description: { value: string };
-        price: { value: string };
-      };
       onSubmit({
-        name: formElements.itemName.value,
-        description: formElements.description.value,
-        price: formElements.price.value,
+        name: name,
+        description: description,
+        price: price,
       });
     }
   }

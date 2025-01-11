@@ -39,6 +39,10 @@ function App() {
     try {
       const createItemResponse = await itemService.createItem(item);
       storeController.addItem(createItemResponse);
+      storeController.showToast({
+        message: "Added Item",
+        type: "success",
+      });
     } catch (error: any) {
       console.log("Error:", error);
       storeController.showToast({
@@ -52,6 +56,10 @@ function App() {
     try {
       const deleteItemResponse = await itemService.deleteItem(itemId);
       storeController.deleteItem(deleteItemResponse.id);
+      storeController.showToast({
+        message: "Deleted Item",
+        type: "warning",
+      });
     } catch (error: any) {
       console.log("DeleteError:", error);
       storeController.showToast({
@@ -71,6 +79,10 @@ function App() {
         editingItem && (await itemService.updateItem(editingItem.id, item));
       console.log("updated:", editedItemResponse);
       storeController.updateItem(editedItemResponse.id, editedItemResponse);
+      storeController.showToast({
+        message: "Updated Item",
+        type: "success",
+      });
       setEditingItem(() => null);
     } catch (error: any) {
       console.log("UpdateError:", error);

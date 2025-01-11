@@ -10,30 +10,18 @@ class ItemService {
   }
 
   async createItem(item: ItemType) {
-    try {
-      const result = await this.httpClient.post("/items/", item);
-      return result;
-    } catch (error: any) {
-      throw error.response.data;
-    }
+    const result = await this.httpClient.post("/items/", item);
+    return result;
   }
 
   async updateItem(id: number, item: ItemType) {
-    try {
-      const result = await this.httpClient.put(`/items/${id}`, item);
-      return result;
-    } catch (error: any) {
-      throw error.response.data;
-    }
+    const result = await this.httpClient.put(`/items/${id}`, item);
+    return result;
   }
 
   async deleteItem(id: number) {
-    try {
-      const result = await this.httpClient.delete(`/items/${id}`);
-      return result;
-    } catch (error: any) {
-      throw error.response.data;
-    }
+    const result = await this.httpClient.delete(`/items/${id}`);
+    return result;
   }
 }
 

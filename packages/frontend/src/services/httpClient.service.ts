@@ -40,8 +40,7 @@ export class AxiosHttpClient implements IHttpClient {
   }
 
   async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.get(url, config);
-    return response.data;
+    return (await this.handleRequest(this.client.get(url, config))).data;
   }
 
   async post<T = any>(
@@ -49,8 +48,7 @@ export class AxiosHttpClient implements IHttpClient {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response = await this.client.post(url, data, config);
-    return response.data;
+    return (await this.handleRequest(this.client.post(url, data, config))).data;
   }
 
   async put<T = any>(
@@ -58,8 +56,7 @@ export class AxiosHttpClient implements IHttpClient {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response = await this.client.put(url, data, config);
-    return response.data;
+    return (await this.handleRequest(this.client.put(url, data, config))).data;
   }
 
   async patch<T = any>(
@@ -67,12 +64,25 @@ export class AxiosHttpClient implements IHttpClient {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response = await this.client.patch(url, data, config);
-    return response.data;
+    return this.handleRequest(this.client.patch(url, data, config));
   }
 
   async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.delete(url, config);
-    return response.data;
+    return (await this.handleRequest(this.client.delete(url, config))).data;
+  }
+
+  private async handleRequest<T>(request: Promise<T>): Promise<T> {
+    try {
+      return await request;
+    } catch (error: any) {
+      const formattedError: HttpClientError = {
+        status: error?.response?.data?.status || "unknown",
+        message: error?.response?.data?.message || error.message,
+        errors: error?.response?.data?.errors || [
+          { path: "unknown", message: error.message },
+        ],
+      };
+      throw formattedError;
+    }
   }
 }

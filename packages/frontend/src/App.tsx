@@ -7,27 +7,33 @@ import UpdateItemForm from "./components/UpdateItemForm";
 import { storeController } from "./stores";
 import { useSelector } from "react-redux";
 import Toast from "./components/Toast";
+import Modal from "./components/Modal"; // Import the Modal component
+import { Modal as ModalType } from "./stores/components.slice";
 
 function App() {
   type Item = ItemType & {
     id: number;
   };
-  // const [items, setItems] = useState<any[]>([]);
-  const items = useSelector((state: { items: Item[] }) => state.items);
 
+  const items = useSelector((state: { items: Item[] }) => state.items);
+  const modal = useSelector((state: { modal: ModalType }) => state.modal);
   const [editingItem, setEditingItem] = useState<null | Item>();
 
   useEffect(() => {
     fetchItems();
   }, []);
 
+  useEffect(() => {
+    if (!modal.isOpen) {
+      setEditingItem(null);
+    }
+  }, [modal.isOpen]);
+
   async function fetchItems() {
     const itemsResponse = await itemService.getItems();
-    console.log("ItemsResponse:", itemsResponse);
     itemsResponse.forEach((item: Item) => {
       storeController.addItem(item);
     });
-    // setItems(() => itemsResponse);
   }
 
   async function handleItemSubmit(item: ItemType) {
@@ -38,8 +44,8 @@ function App() {
         message: "Added Item",
         type: "success",
       });
+      storeController.closeModal(); // Close modal after submission
     } catch (error: any) {
-      console.log("Error:", error);
       storeController.showToast({
         message: error.message,
         type: "error",
@@ -56,7 +62,6 @@ function App() {
         type: "warning",
       });
     } catch (error: any) {
-      console.log("DeleteError:", error);
       storeController.showToast({
         message: error.message,
         type: "error",
@@ -66,21 +71,21 @@ function App() {
 
   function handleClickEdit(item: Item) {
     setEditingItem(() => item);
+    storeController.openModal();
   }
 
   async function handleUpdateItem(item: any) {
     try {
       const editedItemResponse =
         editingItem && (await itemService.updateItem(editingItem.id, item));
-      console.log("updated:", editedItemResponse);
       storeController.updateItem(editedItemResponse.id, editedItemResponse);
       storeController.showToast({
         message: "Updated Item",
         type: "success",
       });
+      storeController.closeModal();
       setEditingItem(() => null);
     } catch (error: any) {
-      console.log("UpdateError:", error);
       storeController.showToast({
         message: error.message,
         type: "error",
@@ -89,41 +94,45 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full">
+    <div className="w-full min-h-screen flex flex-col items-center bg-gray-100">
       <Toast />
-      <div className="flex flex-1 flex-wrap md:flex-nowrap">
-        <div className="w-full md:w-1/2 h-full bg-gradient-to-tr from-blue-800 to-purple-700 p-4 overflow-y-auto">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {items.map((item) => (
-              <ItemCard
-                key={item.id}
-                item={item}
-                onDelete={handleItemDelete}
-                onClickEdit={handleClickEdit}
-              />
-            ))}
-          </ul>
-        </div>
-        <div className="w-full md:w-1/2 p-4">
-          <div className="max-w-md mx-auto">
-            {!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}
-            {editingItem && (
-              <div>
-                <button
-                  onClick={() => setEditingItem(null)}
-                  className="text-blue-500 hover:underline"
-                >
-                  &larr; Cancel
-                </button>
-                <UpdateItemForm
-                  onSubmit={handleUpdateItem}
-                  defaultValues={editingItem}
-                />
-              </div>
-            )}
-          </div>
-        </div>
+
+      <div className="w-full bg-white text-gray-900 py-4 px-6 flex justify-between items-center shadow-md fixed">
+        <h1 className="text-lg font-bold">Arkmind Demo</h1>
       </div>
+
+      <div className="w-full flex-grow px-4 py-6 mt-12">
+        <ul className=" w-full rounded-sm bg-gray-200 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+          {items.map((item) => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              onDelete={handleItemDelete}
+              onClickEdit={handleClickEdit}
+            />
+          ))}
+        </ul>
+      </div>
+
+      <button
+        className="fixed bottom-6 right-6 bg-blue-500 text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-600 transition-transform transform hover:scale-105"
+        onClick={() => storeController.openModal()}
+        aria-label="Add Item"
+      >
+        +
+      </button>
+
+      <Modal>
+        {!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}
+        {editingItem && (
+          <div>
+            <UpdateItemForm
+              onSubmit={handleUpdateItem}
+              defaultValues={editingItem}
+            />
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

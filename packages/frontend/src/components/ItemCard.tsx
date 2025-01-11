@@ -16,7 +16,7 @@ export default function ItemCard({
   onClickEdit,
 }: ItemCardComponentProps) {
   return (
-    <li className="flex p-2 border-2 flex-col font-sans w-[240px] h-auto rounded-md bg-white">
+    <li className="flex p-2 border-2 flex-col font-sans h-auto rounded-md bg-white">
       <div className="flex justify-between w-full flex-wrap">
         <h2 className="text-xl font-semibold text-gray-900">{item.name}</h2>
         <p className="text-lg font-semibold text-gray-950"> MYR {item.price}</p>

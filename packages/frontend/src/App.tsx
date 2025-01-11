@@ -6,6 +6,7 @@ import { ItemType } from "shared";
 import UpdateItemForm from "./components/UpdateItemForm";
 import { storeController } from "./stores";
 import { useSelector } from "react-redux";
+import Toast from "./components/Toast";
 
 function App() {
   type Item = ItemType & {
@@ -25,6 +26,11 @@ function App() {
     console.log("ItemsResponse:", itemsResponse);
     itemsResponse.forEach((item: Item) => {
       storeController.addItem(item);
+      storeController.showToast({
+        id: item.id.toString(),
+        message: `New item: ${item.name}`,
+        cooldown: 2,
+      });
     });
     // setItems(() => itemsResponse);
   }
@@ -33,8 +39,12 @@ function App() {
     try {
       const createItemResponse = await itemService.createItem(item);
       storeController.addItem(createItemResponse);
-    } catch (error) {
+    } catch (error: any) {
       console.log("Error:", error);
+      storeController.showToast({
+        message: error.message,
+        type: "error",
+      });
     }
   }
 
@@ -42,8 +52,12 @@ function App() {
     try {
       const deleteItemResponse = await itemService.deleteItem(itemId);
       storeController.deleteItem(deleteItemResponse.id);
-    } catch (error) {
+    } catch (error: any) {
       console.log("DeleteError:", error);
+      storeController.showToast({
+        message: error.message,
+        type: "error",
+      });
     }
   }
 
@@ -58,32 +72,39 @@ function App() {
       console.log("updated:", editedItemResponse);
       storeController.updateItem(editedItemResponse.id, editedItemResponse);
       setEditingItem(() => null);
-    } catch (error) {
+    } catch (error: any) {
       console.log("UpdateError:", error);
+      storeController.showToast({
+        message: error.message,
+        type: "error",
+      });
     }
   }
 
   return (
     <>
-      <h1>Hello World</h1>
-      <ul>
-        {items.map((item) => (
-          <ItemCard
-            key={item.id}
-            item={item}
-            onDelete={handleItemDelete}
-            onClickEdit={handleClickEdit}
-          />
-        ))}
-      </ul>
-      <div>{!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}</div>
+      <Toast />
       <div>
-        {editingItem && (
-          <UpdateItemForm
-            onSubmit={handleUpdateItem}
-            defaultValues={editingItem}
-          />
-        )}
+        <h1>Hello World</h1>
+        <ul>
+          {items.map((item) => (
+            <ItemCard
+              key={item.id}
+              item={item}
+              onDelete={handleItemDelete}
+              onClickEdit={handleClickEdit}
+            />
+          ))}
+        </ul>
+        <div>{!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}</div>
+        <div>
+          {editingItem && (
+            <UpdateItemForm
+              onSubmit={handleUpdateItem}
+              defaultValues={editingItem}
+            />
+          )}
+        </div>
       </div>
     </>
   );

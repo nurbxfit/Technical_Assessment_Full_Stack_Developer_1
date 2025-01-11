@@ -102,7 +102,7 @@ function App() {
       </div>
 
       <div className="w-full flex-grow px-4 py-6 mt-12">
-        <ul className=" w-full rounded-sm bg-gray-200 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <ul className=" w-full rounded-sm bg-gray-200 p-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {items.map((item) => (
             <ItemCard
               key={item.id}

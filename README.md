@@ -1,64 +1,132 @@
-# Interview Task: Full Stack Application Development
-## Objective
-Your task is to create a full-stack application for managing "items." The project consists of a backend API built with Express.js and TypeScript and a frontend application using React.js with Redux Toolkit.
+# About
 
-This exercise will help us evaluate your skills in backend development, API design, frontend integration, and state management.
+This is the implementation of Arkmind Interview Task : Full stack Application Development role.
+This implementation has the followings features
 
-## Instructions
-### Backend Requirements
-1. Database Integration:
+Refer the [instruction](./INSTRUCTION.md)
 
-- Use MySQL as the database.
-- Create an items table with the following schema:
-- id (Primary Key, Auto-increment)
-- name (String, required, max length: 100 characters)
-- description (String, optional, max length: 500 characters)
-- price (Decimal, required, must be positive)
-- createdAt (Timestamp, default to current timestamp)
-- updatedAt (Timestamp, updated on modification)
+## Backend
 
-2. Endpoints:
-- Implement the following CRUD operations:
-- POST /api/items - Create a new item.
-- GET /api/items - Get all items.
-- GET /api/items/:id - Get an item by its id.
-- PUT /api/items/:id - Update an existing item by its id.
-- DELETE /api/items/:id - Delete an item by its id.
+1. Using mySQL as database
+2. Using prisma as ORM
+3. Using Winston as Logger
+4. Using Zod as Validator
+5. Have custom input validator middleware
+6. Have custom error handler middleware
 
-3. Validation:
-- Use a validation library (e.g., Zod or Joi) to validate incoming requests.
+## Frontend
 
-4. Code Organization:
-- Use a modular and scalable project structure.
+1. State management with redux and redux toolkit
+2. UI styling with tailwindcss
+3. API integration with axios
+4. Form input validation with debounce
 
-### Frontend Requirements
-1. Features:
-- A single-page application to:
-- Create Item: A form to add a new item.
-- View All Items: A table or list to display all items.
-- Edit Item: A form pre-filled with item details to update.
-- Delete Item: A button to delete an item with confirmation.
+# Setup instructions
 
-2. API Integration:
-- Use Axios  to interact with the backend.
+## Prerequisites
 
-3. State Management:
-- Use Redux Toolkit for global state management.
+- install the followings
+  - [Node.js](https://nodejs.org/en/download) (v16 or higher)
+  - [Bun](https://bun.sh/)
+  - [Docker](https://www.docker.com/) (optional for local database)
+  - [MySQL](https://www.mysql.com/) (optional for local database)
+- Ensure MySQL is running to accept connection.
 
-4. UI/UX:
-- Build a responsive and user-friendly interface using any library (e.g., Ant Design, or TailwindCSS).
+1. Git clone the project
 
-## Deliverables
-### Backend:
-- A GitHub repository containing the Express.js backend with TypeScript.
-Include instructions to set up and run the backend.
+```
+git clone https://github.com/nurbxfit/Technical_Assessment_Full_Stack_Developer_1.git demo
+```
 
-### Frontend:
-- A GitHub repository containing the React.js frontend with Redux Toolkit.
-- Include instructions to set up and run the frontend.
+2. Cd into the project folder and install dependencies
 
-### README:
-- Provide a README.md file for each repository with:
-- Setup instructions.
-- API endpoint details.
-- Any additional notes (e.g., known issues, future enhancements).
+```
+cd demo && bun install
+```
+
+## start the backend
+
+1. Copy `backend/.env.example` into `backend/.env`
+2. Update the `DATABASE_URL` value
+3. run prisma migration
+
+```
+bunx prisma migrate
+```
+
+4. run backend in dev mode
+
+```
+bun run dev
+```
+
+### (optional: local dev database using docker)
+
+1. update the content of `/infra/database/start-db.sh` with your own database credentials if you like to.
+2. run the `start-db.sh` to bring up a mysql database docker container
+3. Execute the `item.sql` script in the docker container to setup database
+
+```
+docker exec -i arkmysql-db mysql -u root -password123 -e "source ./items.sql"
+```
+
+## start the frontend
+
+1. cd into the frontend folder and run the dev mode
+
+```
+cd packages/frontend && bun run dev
+```
+
+# API Endpoints
+
+**base url**: `http://localhost:3000/api`
+
+| Method | Endpoint     | Description             |
+| ------ | ------------ | ----------------------- |
+| POST   | `/items`     | Create an item          |
+| GET    | `/items`     | Get all items           |
+| GET    | `/items/:id` | Get item by id          |
+| PUT    | `/items/:id` | Update an existing item |
+| DELETE | `/items/:id` | Delete an item          |
+
+# Example HTTP Requests
+
+### Create Item
+
+```http
+POST http://localhost:3000/api/items HTTP/1.1
+Content-Type: application/json
+
+{
+"name": "item03",
+"description": "description of item03",
+"price": 1.0
+}
+```
+
+### Get All items
+
+```http
+GET http://localhost:3000/api/items HTTP/1.1
+Content-Type: application/json
+```
+
+### Update an Item
+
+```http
+PUT http://localhost:3000/api/items/1 HTTP/1.1
+Content-Type: application/json
+
+{
+"name": "item01",
+"description": "item renamed to 01",
+"price": 1.2
+}
+```
+
+### Delete an Item failed case
+
+```http
+DELETE http://localhost:3000/api/items/s1s HTTP/1.1
+```

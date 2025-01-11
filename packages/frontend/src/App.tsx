@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { itemService } from "./services/ItemService";
 import ItemCard from "./components/ItemCard";
 import AddItemForm from "./components/AddItemForm";
+import { ItemType } from "shared";
 
 function App() {
   const [items, setItems] = useState<any[]>([]);
@@ -16,8 +17,14 @@ function App() {
     setItems(() => itemsResponse);
   }
 
-  async function handleItemSubmitted(event: any) {
-    console.log("event:", event);
+  async function handleItemSubmit(item: ItemType) {
+    console.log("event:", item);
+    try {
+      const createItemResponse = await itemService.createItem(item);
+      console.log("created:", createItemResponse);
+    } catch (error) {
+      console.log("Error:", error);
+    }
   }
   return (
     <>
@@ -28,7 +35,7 @@ function App() {
         ))}
       </ul>
       <div>
-        <AddItemForm onSubmit={handleItemSubmitted} />
+        <AddItemForm onSubmit={handleItemSubmit} />
       </div>
     </>
   );

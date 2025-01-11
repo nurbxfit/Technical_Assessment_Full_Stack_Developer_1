@@ -1,3 +1,4 @@
+import { ItemType } from "shared";
 import { AxiosHttpClient, IHttpClient } from "./httpClient.service";
 
 class ItemService {
@@ -8,7 +9,14 @@ class ItemService {
     return result;
   }
 
-  createItem() {}
+  async createItem(item: ItemType) {
+    try {
+      const result = await this.httpClient.post("/items/", item);
+      return result;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  }
 
   updateItem() {}
 

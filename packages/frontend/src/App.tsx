@@ -97,7 +97,6 @@ function App() {
     <>
       <Toast />
       <div>
-        <h1>Hello World</h1>
         <ul>
           {items.map((item) => (
             <ItemCard

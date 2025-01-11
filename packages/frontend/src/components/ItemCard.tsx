@@ -16,17 +16,9 @@ export default function ItemCard({
   onClickEdit,
 }: ItemCardComponentProps) {
   return (
-    <li
-      style={{
-        listStyle: "none",
-        borderStyle: "solid",
-        borderColor: "whitesmoke",
-        padding: "20px",
-        margin: "10px",
-      }}
-    >
+    <li className="p-2 bg-slate-400 m-2 w-1/4 rounded-sm text-white">
       <div>
-        <h2>{item.name}</h2>
+        <h2 className="text-lg font-semibold">{item.name}</h2>
         <p> MYR {item.price}</p>
         <p>{item.description}</p>
       </div>

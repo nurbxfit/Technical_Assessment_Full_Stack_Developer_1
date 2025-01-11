@@ -15,6 +15,11 @@ type UseItemFormParams = {
   };
 };
 
+/**
+ * previously refactored AddItemForm component, trasfer the input logic here into a re-usable hooks,
+ * doing this so that I can just re-use the logic in UpdateItemForm component.
+ * not sure if this hook will exist after implement redux, we'll see
+ */
 export function useItemForm({ defaults = {} }: UseItemFormParams) {
   const [name, setName] = useState(defaults.name || "");
   const [description, setDescription] = useState(defaults.description || "");

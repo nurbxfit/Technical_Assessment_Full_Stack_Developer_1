@@ -2,17 +2,15 @@ import { z } from "zod";
 
 function getRefinedNonNegativeStringToNumberSchema(
   message: string,
-  parseRadix?: number
+  toFix?: number
 ) {
   return z
     .string()
     .refine((value) => {
-      const parsedValue = parseInt(value);
-      return (
-        !isNaN(parsedValue) && Number.isInteger(parsedValue) && parsedValue > 0
-      );
+      const parsedValue = parseFloat(value);
+      return !isNaN(parsedValue) && parsedValue >= 0;
     }, message)
-    .transform((value) => parseInt(value, parseRadix));
+    .transform((value) => parseFloat(parseFloat(value).toFixed(toFix)));
 }
 
 export const NameInputSchema = z

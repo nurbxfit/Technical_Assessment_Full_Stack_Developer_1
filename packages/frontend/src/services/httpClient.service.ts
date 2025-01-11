@@ -8,6 +8,10 @@ export interface IHttpClient {
   delete<T = any>(url: string, config?: any): Promise<T>;
 }
 
+// general idea is, class implementing IHttpClient should catch and re-throw a specific formatted HttpClientError,
+// so that any class implementing the IHttpClient interface
+// will throw the same error, so the consumer which eg the service will
+// get the consistence error object that can be easily deconstruct and display on screen.
 export interface HttpClientError {
   // somthing not sure yet, will think about this later. maybe can follow the backend error format
   status: string;
@@ -17,18 +21,6 @@ export interface HttpClientError {
     message: string;
   }[];
 }
-
-// todo, maybe should handle error in this implementation instead of in service??
-// not decide yet which to do.
-// general idea is, itt will catch and re-throw a specific formatted HttpClientError,
-// so that any class implementing the IHttpClient interface
-// will throw the same error, so the consumer which is the service will
-// get the consistence error object that can be easily deconstruct and display on screen.
-// right now in ItemService, we are assuming that all implementation of IHttpClient class
-// will throw an error that have error.response.data which isn't necessarily true.
-// we can do Fetch implementation and it may not throw the same error.
-// so maybe handling error here is a good idea ??
-// remember to do this before/after I implement the redux store function,
 
 export class AxiosHttpClient implements IHttpClient {
   private client: AxiosInstance;

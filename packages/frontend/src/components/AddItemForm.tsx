@@ -4,8 +4,6 @@ type AddItemFormComponentProps = {
   onSubmit: CallableFunction;
 };
 
-// it seems like if I, create UpdateItemForm with same logic, it seems redundant,
-// may need to refactor it into a hooks.
 export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
   const {
     name,

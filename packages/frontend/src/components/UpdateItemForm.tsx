@@ -9,8 +9,10 @@ type UpdateItemFormComponentProps = {
   };
 };
 
-// it seems like if I, create UpdateItemForm with same logic, it seems redundant,
-// may need to refactor it into a hooks.
+// this component still maintain some duplication with AddItemForm,
+// even tho I already refactored some of the logic into useItemForm hooks
+// right now I just copy paste the content from AdditemForm.
+// maybe I will change this in future, maybe just make the AddItemForm into a generic ItemForm ?
 export default function UpdateItemForm({
   onSubmit,
   defaultValues,

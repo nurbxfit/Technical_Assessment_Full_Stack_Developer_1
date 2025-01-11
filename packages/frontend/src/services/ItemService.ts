@@ -18,7 +18,14 @@ class ItemService {
     }
   }
 
-  updateItem() {}
+  async updateItem(id: number, item: ItemType) {
+    try {
+      const result = await this.httpClient.put(`/items/${id}`, item);
+      return result;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  }
 
   async deleteItem(id: number) {
     try {

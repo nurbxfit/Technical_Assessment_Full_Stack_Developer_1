@@ -1,12 +1,20 @@
 import { useItemForm } from "../hooks/useItemForm";
 
-type AddItemFormComponentProps = {
+type UpdateItemFormComponentProps = {
   onSubmit: CallableFunction;
+  defaultValues: {
+    name?: string;
+    description?: string;
+    price?: number;
+  };
 };
 
 // it seems like if I, create UpdateItemForm with same logic, it seems redundant,
 // may need to refactor it into a hooks.
-export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
+export default function UpdateItemForm({
+  onSubmit,
+  defaultValues,
+}: UpdateItemFormComponentProps) {
   const {
     name,
     description,
@@ -14,7 +22,7 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
     errors,
     getErrorByFieldName,
     handleInputChange,
-  } = useItemForm({});
+  } = useItemForm({ defaults: defaultValues });
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();

@@ -1,14 +1,20 @@
 import { PropsWithChildren } from "react";
 import { ItemType } from "shared";
 
+type Item = ItemType & {
+  id: number;
+};
 type ItemCardComponentProps = PropsWithChildren & {
-  item: ItemType & {
-    id: number;
-  };
+  item: Item;
   onDelete?: (id: number) => void;
+  onClickEdit?: (item: Item) => any;
 };
 
-export default function ItemCard({ item, onDelete }: ItemCardComponentProps) {
+export default function ItemCard({
+  item,
+  onDelete,
+  onClickEdit,
+}: ItemCardComponentProps) {
   return (
     <li
       style={{
@@ -26,6 +32,9 @@ export default function ItemCard({ item, onDelete }: ItemCardComponentProps) {
       </div>
       {onDelete && typeof onDelete == "function" && (
         <button onClick={() => onDelete(item.id)}>Delete</button>
+      )}
+      {onClickEdit && typeof onClickEdit == "function" && (
+        <button onClick={() => onClickEdit(item)}>Edit</button>
       )}
     </li>
   );

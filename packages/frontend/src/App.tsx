@@ -3,9 +3,14 @@ import { itemService } from "./services/ItemService";
 import ItemCard from "./components/ItemCard";
 import AddItemForm from "./components/AddItemForm";
 import { ItemType } from "shared";
+import UpdateItemForm from "./components/UpdateItemForm";
 
 function App() {
+  type Item = ItemType & {
+    id: number;
+  };
   const [items, setItems] = useState<any[]>([]);
+  const [editingItem, setEditingItem] = useState<null | Item>();
 
   useEffect(() => {
     fetchItems();
@@ -35,16 +40,44 @@ function App() {
       console.log("DeleteError:", error);
     }
   }
+
+  function handleClickEdit(item: Item) {
+    console.log("Editing:", item);
+    setEditingItem(() => item);
+  }
+
+  async function handleUpdateItem(item: any) {
+    try {
+      const editedItemResponse =
+        editingItem && (await itemService.updateItem(editingItem.id, item));
+      console.log("updated:", editedItemResponse);
+    } catch (error) {
+      console.log("UpdateError:", error);
+    }
+    console.log("updating:item:", item);
+  }
+
   return (
     <>
       <h1>Hello World</h1>
       <ul>
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} onDelete={handleItemDelete} />
+          <ItemCard
+            key={item.id}
+            item={item}
+            onDelete={handleItemDelete}
+            onClickEdit={handleClickEdit}
+          />
         ))}
       </ul>
+      <div>{!editingItem && <AddItemForm onSubmit={handleItemSubmit} />}</div>
       <div>
-        <AddItemForm onSubmit={handleItemSubmit} />
+        {editingItem && (
+          <UpdateItemForm
+            onSubmit={handleUpdateItem}
+            defaultValues={editingItem}
+          />
+        )}
       </div>
     </>
   );

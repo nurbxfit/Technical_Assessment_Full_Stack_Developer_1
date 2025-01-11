@@ -3,11 +3,12 @@ import { ItemType } from "shared";
 
 type ItemCardComponentProps = PropsWithChildren & {
   item: ItemType & {
-    id: string;
+    id: number;
   };
+  onDelete?: (id: number) => void;
 };
 
-export default function ItemCard({ item }: ItemCardComponentProps) {
+export default function ItemCard({ item, onDelete }: ItemCardComponentProps) {
   return (
     <li
       style={{
@@ -17,13 +18,15 @@ export default function ItemCard({ item }: ItemCardComponentProps) {
         padding: "20px",
         margin: "10px",
       }}
-      key={item.id}
     >
       <div>
         <h2>{item.name}</h2>
         <p> MYR {item.price}</p>
         <p>{item.description}</p>
       </div>
+      {onDelete && typeof onDelete == "function" && (
+        <button onClick={() => onDelete(item.id)}>Delete</button>
+      )}
     </li>
   );
 }

@@ -20,7 +20,14 @@ class ItemService {
 
   updateItem() {}
 
-  deleteItem() {}
+  async deleteItem(id: number) {
+    try {
+      const result = await this.httpClient.delete(`/items/${id}`);
+      return result;
+    } catch (error: any) {
+      throw error.response.data;
+    }
+  }
 }
 
 const axiosHttpClient = new AxiosHttpClient("http://localhost:3000/api");

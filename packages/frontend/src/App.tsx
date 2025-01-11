@@ -26,12 +26,21 @@ function App() {
       console.log("Error:", error);
     }
   }
+
+  async function handleItemDelete(itemId: number) {
+    try {
+      const deleteItemResponse = await itemService.deleteItem(itemId);
+      console.log("deleted:", deleteItemResponse);
+    } catch (error) {
+      console.log("DeleteError:", error);
+    }
+  }
   return (
     <>
       <h1>Hello World</h1>
       <ul>
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard key={item.id} item={item} onDelete={handleItemDelete} />
         ))}
       </ul>
       <div>

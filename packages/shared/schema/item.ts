@@ -10,7 +10,7 @@ function getRefinedNonNegativeStringToNumberSchema(
       const parsedValue = parseFloat(value);
       return !isNaN(parsedValue) && parsedValue >= 0;
     }, message)
-    .transform((value) => parseFloat(value).toFixed(toFix));
+    .transform((value) => parseFloat(parseFloat(value).toFixed(toFix)));
 }
 
 export const NameInputSchema = z

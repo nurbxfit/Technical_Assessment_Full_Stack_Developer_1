@@ -17,6 +17,7 @@ function getRefinedNonNegativeStringToNumberSchema(
 
 export const NameInputSchema = z
   .string()
+  .nonempty()
   .max(100, "Name should be less 100 characters");
 
 export const DescriptionInputSchema = z

@@ -27,7 +27,9 @@ export function useItemForm({ defaults = {} }: UseItemFormParams) {
 
   const [errors, setErrors] = useState<any[]>([]);
 
-  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleInputChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     const value = e.target.value;
     const fieldName = e.target.name;
 

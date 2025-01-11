@@ -37,63 +37,80 @@ export default function UpdateItemForm({
     }
   }
   return (
-    <div
-      style={{
-        padding: "20px",
-        borderStyle: "solid",
-        borderColor: "whitesmoke",
-      }}
-    >
+    <div className="p-6 border border-gray-200 rounded-lg shadow-md">
       {/* {JSON.stringify(errors)} */}
-      <form onSubmit={handleSubmit}>
+      <form className="mt-1 space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label>Name:</label>
+          <label htmlFor="itemName" className="block text-lg font-medium mb-1">
+            Name
+          </label>
           <input
             id="itemName"
             name="name"
             value={name}
             maxLength={100}
             onChange={handleInputChange}
+            placeholder="Item name"
+            className="w-full border-2 border-gray-300 rounded-lg p-2 focus::outline-none focus:ring-2 focus: ring-blue-500"
           />
-          <div>
-            <small style={{ color: "red" }}>
+          {getErrorByFieldName("name") && (
+            <small className="text-red-600">
               {getErrorByFieldName("name")}
             </small>
-          </div>
+          )}
         </div>
         <div>
-          <label>Description:</label>
-          <input
+          <label
+            htmlFor="description"
+            className="block text-lg font-medium mb-1"
+          >
+            Description
+          </label>
+          <textarea
             id="description"
             name="description"
             value={description}
             maxLength={500}
             onChange={handleInputChange}
+            placeholder="Enter item description"
+            className="w-full border-2 border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows={4}
           />
-          <div>
-            <small style={{ color: "red" }}>
+          {getErrorByFieldName("description") && (
+            <small className="text-red-600">
               {getErrorByFieldName("description")}
             </small>
-          </div>
+          )}
         </div>
+
         <div>
-          <label>Price:</label>
+          <label htmlFor="price" className="block text-lg font-medium mb-1">
+            Price
+          </label>
           <input
             id="price"
             name="price"
             value={price}
             type="number"
             onChange={handleInputChange}
+            placeholder="Enter price"
+            className="w-full border-2 border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <div>
-            <small style={{ color: "red" }}>
+          {getErrorByFieldName("price") && (
+            <small className="text-red-600">
               {getErrorByFieldName("price")}
             </small>
-          </div>
+          )}
         </div>
 
-        <button disabled={errors.length > 0} type="submit">
-          submit
+        <button
+          disabled={errors.length > 0}
+          type="submit"
+          className={`mt-4 w-full py-2 rounded-lg text-white ${
+            errors.length > 0 ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+          }`}
+        >
+          Update
         </button>
       </form>
     </div>

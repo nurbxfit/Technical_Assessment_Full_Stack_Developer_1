@@ -26,10 +26,24 @@ const toastSlice = createSlice({
   },
 });
 
-// type Modal = {
-//   isVisible: false;
-//   modalType: null;
-//   modalProps: PropsWithChildren;
-// };
+export type Modal = {
+  isOpen: boolean;
+  content?: React.ReactNode;
+};
 
-export { toastSlice };
+const modalSlice = createSlice({
+  name: "modal",
+  initialState: { isOpen: false, content: undefined } as Modal,
+  reducers: {
+    open(state, action: PayloadAction<React.ReactNode>) {
+      state.isOpen = true;
+      state.content = action.payload;
+    },
+    close(state) {
+      state.isOpen = false;
+      state.content = undefined;
+    },
+  },
+});
+
+export { toastSlice, modalSlice };

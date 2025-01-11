@@ -1,12 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import itemsSlice from "./items.slice";
 import { ItemType } from "shared";
-import { Toast, toastSlice } from "./components.slice";
+import { modalSlice, Toast, toastSlice } from "./components.slice";
 
 const store = configureStore({
   reducer: {
     items: itemsSlice.reducer,
     toasts: toastSlice.reducer,
+    modal: modalSlice.reducer,
   },
 });
 
@@ -35,6 +36,13 @@ const storeController = {
   },
   hideToast(id: string) {
     store.dispatch(toastSlice.actions.hideToast(id));
+  },
+
+  openModal(content?: React.ReactNode) {
+    store.dispatch(modalSlice.actions.open(content));
+  },
+  closeModal() {
+    store.dispatch(modalSlice.actions.close());
   },
 };
 

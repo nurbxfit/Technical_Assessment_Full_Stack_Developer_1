@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
+  debounce,
   DescriptionInputSchema,
   NameInputSchema,
   PriceInputSchema,
@@ -11,25 +12,46 @@ type AddItemFormComponentProps = {
 };
 
 export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
-  const [name, setName] = useState("Default");
-  const [description, setDescription] = useState(
-    "Default description of the price"
-  );
-  const [price, setPrice] = useState(2);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
   const [errors, setErrors] = useState<any[]>([]);
 
-  function validateInput(
-    e: React.ChangeEvent<HTMLInputElement>,
-    schema: ZodSchema
-  ) {
+  function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     const fieldName = e.target.name;
+
+    switch (fieldName) {
+      case "name":
+        setName(value);
+        validateInputWithDebounce({ value, fieldName }, NameInputSchema);
+        break;
+      case "description":
+        setDescription(value);
+        validateInputWithDebounce({ value, fieldName }, DescriptionInputSchema);
+        break;
+      case "price":
+        setPrice(value);
+        validateInputWithDebounce({ value, fieldName }, PriceInputSchema);
+        break;
+    }
+  }
+
+  const validateInputWithDebounce = useCallback(
+    debounce(validateInput, 500),
+    []
+  );
+
+  function validateInput(
+    { value, fieldName }: { value: any; fieldName: string },
+    schema: ZodSchema
+  ) {
     try {
       schema.parse(value);
       setErrors((prev) => prev.filter((err) => err.path !== fieldName));
     } catch (e: any) {
-      console.error(e);
+      // console.error(e);
       const formattedErrors = e.errors.map((error: ZodIssue) => ({
         path: fieldName,
         message: error.message,
@@ -38,18 +60,6 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
         ...prevErrors.filter((err) => err.path !== fieldName),
         ...formattedErrors,
       ]);
-    } finally {
-      switch (fieldName) {
-        case "name":
-          setName(value);
-          break;
-        case "description":
-          setDescription(value);
-          break;
-        case "price":
-          setPrice(parseInt(value));
-          break;
-      }
     }
   }
 
@@ -84,7 +94,7 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
             name="name"
             value={name}
             maxLength={100}
-            onChange={(e) => validateInput(e, NameInputSchema)}
+            onChange={handleInputChange}
           />
           <div>
             <small style={{ color: "red" }}>
@@ -99,7 +109,7 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
             name="description"
             value={description}
             maxLength={500}
-            onChange={(e) => validateInput(e, DescriptionInputSchema)}
+            onChange={handleInputChange}
           />
           <div>
             <small style={{ color: "red" }}>
@@ -114,7 +124,7 @@ export default function AddItemForm({ onSubmit }: AddItemFormComponentProps) {
             name="price"
             value={price}
             type="number"
-            onChange={(e) => validateInput(e, PriceInputSchema)}
+            onChange={handleInputChange}
           />
           <div>
             <small style={{ color: "red" }}>
